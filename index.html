@@ -8,11 +8,32 @@
 <meta name="google-adsense-account" content="ca-pub-9743896158161620">
 <meta name="naver-site-verification" content="b17a4d42eed4d588fadafaa9c085962c197b3f6e">
 <link rel="canonical" href="https://1myeon.kr/">
-<meta http-equiv="refresh" content="0; url=https://1myeon.kr/">
-<script>location.replace('https://1myeon.kr'+location.pathname+location.search+location.hash)</script>
-<style>body{font-family:system-ui,sans-serif;text-align:center;padding:60px 16px;color:#111;background:#fff}a{color:#C8321E}</style>
+<style>body{font-family:system-ui,sans-serif;text-align:center;padding:60px 16px;color:#111;background:#fff;line-height:1.6}a{color:#C8321E}button{font:inherit;font-weight:700;padding:14px 20px;border:0;border-radius:12px;background:#C8321E;color:#fff;cursor:pointer}#bridge{display:none}</style>
+<script>
+(function(){
+  var NEW='https://1myeon.kr', dest=NEW+location.pathname+location.search+location.hash, tok=null;
+  try{ tok=localStorage.getItem('ghToken') }catch(e){}
+  // 입력 화면 + 이 기기에 저장 열쇠가 있으면: 열쇠를 새 주소로 옮기는 버튼을 보여 줌
+  if(/^\/news\/write/.test(location.pathname) && tok){
+    window.__bridge=function(){
+      var w=window.open(NEW+'/news/write.html?from=old');
+      if(!w){ location.href=NEW+'/news/write.html'; return }
+      var n=0, t=setInterval(function(){ n++; try{ w.postMessage({type:'ghToken',token:tok},NEW) }catch(e){} if(n>40) clearInterval(t) },500);
+      window.addEventListener('message',function(ev){ if(ev.origin===NEW && ev.data==='ghToken-ok'){ clearInterval(t); try{localStorage.removeItem('ghToken')}catch(e){} document.getElementById('bridge').innerHTML='<p>옮겼어요! 새 창에서 계속 쓰시면 돼요. 이 창은 닫아도 돼요.</p>' } });
+    };
+    document.addEventListener('DOMContentLoaded',function(){ document.getElementById('bridge').style.display='block'; document.getElementById('plain').style.display='none' });
+    return;
+  }
+  location.replace(dest);
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=https://1myeon.kr/"></noscript>
 </head>
 <body>
-<p>주소가 바뀌었어요. <a href="https://1myeon.kr/">1myeon.kr</a>로 이동하고 있어요.</p>
+<div id="plain"><p>주소가 바뀌었어요. <a href="https://1myeon.kr/">1myeon.kr</a>로 이동하고 있어요.</p></div>
+<div id="bridge">
+  <p><b>오늘의 1면 주소가 1myeon.kr로 바뀌었어요.</b><br>아래 버튼을 누르면 이 휴대폰의 저장 열쇠(토큰)를 새 주소로 옮겨요.</p>
+  <p><button onclick="__bridge()">열쇠 옮기고 새 주소로 가기</button></p>
+</div>
 </body>
 </html>
